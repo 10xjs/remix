@@ -48,6 +48,7 @@ export type GetLoadContextFunction<
       caches: CacheStorage;
     };
   };
+  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>);
 }) => AppLoadContext | Promise<AppLoadContext>;
 
 export type RequestHandler<Env = any> = PagesFunction<Env>;
