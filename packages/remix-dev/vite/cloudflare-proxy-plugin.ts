@@ -19,6 +19,7 @@ type LoadContext<Env, Cf extends CfProperties> = {
 type GetLoadContext<Env, Cf extends CfProperties> = (args: {
   request: Request;
   context: LoadContext<Env, Cf>;
+  build: ServerBuild | (() => ServerBuild | Promise<ServerBuild>)
 }) => AppLoadContext | Promise<AppLoadContext>;
 
 function importWrangler() {
@@ -72,7 +73,7 @@ export const cloudflareDevProxyVitePlugin = <Env, Cf extends CfProperties>({
               let handler = createRequestHandler(build, "development");
               let req = fromNodeRequest(nodeReq, nodeRes);
               let loadContext = getLoadContext
-                ? await getLoadContext({ request: req, context })
+                ? await getLoadContext({ request: req, context, build })
                 : context;
               let res = await handler(req, loadContext);
               await toNodeRequest(res, nodeRes);
